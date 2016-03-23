@@ -37,8 +37,8 @@ int main() {
 }
 
 void testSort() {
-	const int N = 150;
-	const int testNum = 10000;
+	const int N = 5;
+	const int testNum = 1;
 	int a[N], b[N];
 	for (int i = 0; i<testNum; i++) {
 		for (int j = 0; j<N; j++) {
@@ -50,6 +50,10 @@ void testSort() {
 
 		memcpy(b, a, sizeof(a));
 		quickSort(b, 0, N-1);
+		testA(b, N);
+		
+		memcpy(b, a, sizeof(a));
+		insertSort(b, N);
 		testA(b, N);
 	}
 }
@@ -75,7 +79,6 @@ void quickSort(int a[], int left, int right) {
 		return;
 	int p = a[left];
 	int i = left, j = right;
-	int temp;
 	// printA(a, left, right);
 	while (i < j) {
 		while (i < j && a[j] >= p) j--;
@@ -87,6 +90,28 @@ void quickSort(int a[], int left, int right) {
 	// printA(a, left, right);
 	quickSort(a, left, j - 1);
 	quickSort(a, j + 1, right);
+}
+
+void insertSort(int a[], int N){
+	int *b = new int[N];
+	b[0] = a[0];
+	int j;
+	for(int i=1; i<N; i++){
+		j = 0;
+		while(b[j]<a[i] && j<i) j++;
+		for(int k=i; k>j; k--){
+			b[k] = b[k-1];
+		}
+		b[j] = a[i];
+		for(int k=0;k<=i;k++){
+			cout<<b[k]<<" ";
+		}
+		cout<<endl;
+	}
+	cout<<sizeof(b)<<sizeof(a)<<endl;
+	printA(a, N);
+	memcpy(a, b, sizeof(a));
+	printA(a, N);
 }
 
 void quickSort2(int arr[], int left, int right) {
