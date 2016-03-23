@@ -27,5 +27,6 @@
 *.out
 *.app
 
-VsProject
-.vscode
+vsproject
+compiling_error.txt
+test.cpp
