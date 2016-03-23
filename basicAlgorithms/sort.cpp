@@ -37,8 +37,8 @@ int main() {
 }
 
 void testSort() {
-	const int N = 5;
-	const int testNum = 1;
+	const int N = 15;
+	const int testNum = 100000;
 	int a[N], b[N];
 	for (int i = 0; i<testNum; i++) {
 		for (int j = 0; j<N; j++) {
@@ -103,15 +103,10 @@ void insertSort(int a[], int N){
 			b[k] = b[k-1];
 		}
 		b[j] = a[i];
-		for(int k=0;k<=i;k++){
-			cout<<b[k]<<" ";
-		}
-		cout<<endl;
 	}
-	cout<<sizeof(b)<<sizeof(a)<<endl;
-	printA(a, N);
-	memcpy(a, b, sizeof(a));
-	printA(a, N);
+	for(int i=0;i<N;i++){
+		a[i] = b[i];
+	}
 }
 
 void quickSort2(int arr[], int left, int right) {
