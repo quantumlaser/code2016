@@ -44,15 +44,15 @@ void testSort() {
 		for (int j = 0; j<N; j++) {
 			a[j] = rand() % 1000;
 		}
-		memcpy(b, a, sizeof(a));
+		memcpy(b, a, sizeof(int)*N);
 		bubbleSort(b, N);
 		testA(b, N);
 
-		memcpy(b, a, sizeof(a));
+		memcpy(b, a, sizeof(int)*N);
 		quickSort(b, 0, N-1);
 		testA(b, N);
 		
-		memcpy(b, a, sizeof(a));
+		memcpy(b, a, sizeof(int)*N);
 		insertSort(b, N);
 		testA(b, N);
 	}
@@ -74,6 +74,21 @@ void bubbleSort(int a[], int N) {
 	}
 }
 
+void insertSort(int a[], int N){
+	int *b = new int[N];
+	b[0] = a[0];
+	int j;
+	for(int i=1; i<N; i++){
+		j = 0;
+		while(b[j]<a[i] && j<i) j++;
+		for(int k=i; k>j; k--){
+			b[k] = b[k-1];
+		}
+		b[j] = a[i];
+	}
+	memcpy(a, b, sizeof(int)*N);
+}
+
 void quickSort(int a[], int left, int right) {
 	if (right - left < 1)
 		return;
@@ -90,23 +105,6 @@ void quickSort(int a[], int left, int right) {
 	// printA(a, left, right);
 	quickSort(a, left, j - 1);
 	quickSort(a, j + 1, right);
-}
-
-void insertSort(int a[], int N){
-	int *b = new int[N];
-	b[0] = a[0];
-	int j;
-	for(int i=1; i<N; i++){
-		j = 0;
-		while(b[j]<a[i] && j<i) j++;
-		for(int k=i; k>j; k--){
-			b[k] = b[k-1];
-		}
-		b[j] = a[i];
-	}
-	for(int i=0;i<N;i++){
-		a[i] = b[i];
-	}
 }
 
 void quickSort2(int arr[], int left, int right) {
