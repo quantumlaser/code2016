@@ -2,6 +2,12 @@
 #include<vector>
 #include<fstream>
 using namespace std;
+struct Line{
+	int type;
+	int C;
+	int start;
+	int end;
+}
 int swap(int &a, int &b){
 	int temp=a;
 	a = b;
@@ -20,8 +26,9 @@ int main(){
 	int N;
 	int x0,y0,x1,y1;
 	int temp;
-	vector<vector<int> > vec;
-	vector<int> xy;
+	vector<Line > vec;
+	Line *line;
+	/*
 	xy.push_back(3);
 	vec.push_back(xy);
 	xy.clear();
@@ -30,11 +37,15 @@ int main(){
 	vec.push_back(xy);
 	xy.clear();
 	cout<<vec[0][0]<<" "<<vec[1][1]<<endl;
+	*/
 	while(S--){
 		cin>>N;
 		while(N--){
 			cin>>x0>>y0>>x1>>y1;
-			xy.clear();
+			line = new Line;
+			if(x0 == x1){
+				
+			}
 			if(x0>x1){
 				swap(x0,x1);
 				swap(y0,y1);
