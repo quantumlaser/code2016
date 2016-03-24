@@ -22,8 +22,9 @@ int main() {
 	char c;
 	cin >> xyz[0] >> xyz[1] >> xyz[2];
 	sort3(xyz);
-	cin.get();
-	while ((c = cin.get()) != -1 && c != '\n') {
+	// cin.get();
+	// string str;cin>>str;
+	while (cin>>c) {
 		switch (c) {
 		case 'R':
 			C[0]++;
