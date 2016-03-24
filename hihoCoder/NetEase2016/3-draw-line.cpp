@@ -1,19 +1,54 @@
 #include<iostream>
 #include<vector>
 #include<fstream>
+#include<algorithm>
 using namespace std;
-struct Line{
+struct Line {
 	int type;
 	int C;
 	int start;
-	int end;
-}
-int swap(int &a, int &b){
-	int temp=a;
+	int stop;
+};
+
+void swap(int &a, int &b) {
+	int temp = a;
 	a = b;
 	b = temp;
 }
-int main(){
+bool comp(Line *line1, Line *line2) {
+	if (line1->type != line2->type) {
+		return line1->type < line2->type;
+	}
+	if (line1->C != line2->C) {
+		return line1->C < line2->C;
+	}
+	return line1->start < line2->start;
+}
+
+int drawLine(vector<Line*> vec) {
+	int num = vec.size();
+	int res = num;
+	int type, C;
+	unsigned int j;
+	int stopPos;
+	for (unsigned int i = 0; i < num; ) {
+		type = vec[i]->type;
+		C = vec[i]->C;
+		stopPos = vec[i]->stop;
+		j = i + 1;
+		while (j < num && vec[j]->type == type && vec[j]->C == C) {
+			if (vec[j]->start <= stopPos) {
+				res--;
+			}
+			stopPos = max(stopPos, vec[j]->stop);
+			j++;
+		}
+		i = j;
+	}
+	return res;
+}
+
+int main() {
 	// #define Str3
 #ifndef Str3
 	std::ifstream in("input.txt");
@@ -24,9 +59,8 @@ int main(){
 #endif
 	int S;
 	int N;
-	int x0,y0,x1,y1;
-	int temp;
-	vector<Line > vec;
+	int x0, y0, x1, y1;
+	vector<Line* > vec;
 	Line *line;
 	/*
 	xy.push_back(3);
@@ -38,48 +72,45 @@ int main(){
 	xy.clear();
 	cout<<vec[0][0]<<" "<<vec[1][1]<<endl;
 	*/
-	while(S--){
-		cin>>N;
-		while(N--){
-			cin>>x0>>y0>>x1>>y1;
+	cin >> S;
+	while (S--) {
+		cin >> N;
+		vec.clear();
+		while (N--) {
+			cin >> x0 >> y0 >> x1 >> y1;
 			line = new Line;
-			if(x0 == x1){
-				
+			if (x0 == x1) {
+				line->type = 0;
+				line->C = x0;
+				line->start = y0 < y1 ? y0 : y1;
+				line->stop = y0 < y1 ? y1 : y0;
 			}
-			if(x0>x1){
-				swap(x0,x1);
-				swap(y0,y1);
-			}
-			if(x0 == x1 && y0 > y1){
-				swap(y0,y1);
-			}
-			xy.push_back(x0);
-			xy.push_back(y0);
-			xy.push_back(x1);
-			xy.push_back(y1);	
-			if(x0 == x1){
-				xy.push_back(0);
-				xy.push_back(x0);
-			}
-			if(y0 == y1){
-				xy.push_back(1);
-				xy.push_back(y0);
-			}
-			if(x0 + y0 == x1 + y1){
-				xy.push_back(2);
-				xy.push_back(x0 + y0);
-			} else{
-				xy.push_back(3);
-				xy.push_back(x0 - y0);
-			}
-			vec.push_back(xy);			
-		}
-		for(int i=0;i<vec.size();i++){
-			for(int j=0;j<6;j++){
-				cout<<vec[i][j]<<" ";
-			}
-			cout<<endl;
-		}
-	}
+			else {
+				if (y0 == y1) {
+					line->type = 1;
+					line->C = y0;
 
+				}
+				else {
+					if (x0 + y0 == x1 + y1) {
+						line->type = 2;
+						line->C = x0 + y0;
+					} else {
+						line->type = 3;
+						line->C = x0 - y0;
+					}
+				}
+				line->start = x0 < x1 ? x0 : x1;
+				line->stop = x0 < x1 ? x1 : x0;
+			}
+			vec.push_back(line);
+		}
+		sort(vec.begin(), vec.end(), comp);
+		for (unsigned int i = 0; i<vec.size(); i++) {
+			cout << vec[i]->type<< " "<<vec[i]->C<<" ";
+			cout << vec[i]->start << " " << vec[i]->stop << endl;
+		}
+		cout << drawLine(vec) << endl;
+		cout << endl;
+	}
 }

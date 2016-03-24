@@ -4,6 +4,7 @@
 using namespace std;
 void bubbleSort(int a[], int N);
 void insertSort(int a[], int N);
+void insertSort2(int a[], int N);
 void quickSort(int a[], int left, int right);
 void testSort();
 void printA(int a[], int N) {
@@ -53,7 +54,7 @@ void testSort() {
 		testA(b, N);
 		
 		memcpy(b, a, sizeof(int)*N);
-		insertSort(b, N);
+		insertSort2(b, N);
 		testA(b, N);
 	}
 }
@@ -87,6 +88,20 @@ void insertSort(int a[], int N){
 		b[j] = a[i];
 	}
 	memcpy(a, b, sizeof(int)*N);
+}
+
+void insertSort2(int a[], int N){
+	int j;
+	int temp;
+	for(int i=1; i<N; i++){
+		j = i-1;
+		while(j>=0 && a[j+1]<a[j]){
+			temp = a[j+1];
+			a[j+1] = a[j];
+			a[j] = temp;
+			j--;
+		}
+	}
 }
 
 void quickSort(int a[], int left, int right) {
