@@ -1,6 +1,7 @@
 #include"graph_new.h"
 #include<iostream>
 #include<fstream>
+void test();
 int main(){
 	// #define testg
 #ifndef testg
@@ -35,4 +36,26 @@ int main(){
 	// G.DFS(3);
 	// G.clear_visited();
 	G.BFS();
+	std::cout<<std::endl;
+	test();
+}
+void test(){
+	std::ifstream in("input02.txt");
+	std::streambuf *cinbuf = std::cin.rdbuf();
+	std::cin.rdbuf(in.rdbuf());
+	int V, E;
+	std::cin>>V>>E;
+	int v, w;
+	Graph G(V, true);
+	// std::cout<<(G.get_digraph() ? 1 : 0)<<std::endl;
+	while(std::cin>>v>>w){
+		G.insert(v, w);
+	}
+	std::vector<int> topoSeq = G.TopoSort();
+	std::cout<<"TopoSort: "<<std::endl;
+	for(auto it = topoSeq.begin(); it!=topoSeq.end(); it++){
+		std::cout<<*it<<" ";
+	}
+	std::cout<<std::endl;
+	std::cin.rdbuf(cinbuf);
 }

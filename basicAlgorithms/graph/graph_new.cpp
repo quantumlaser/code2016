@@ -1,11 +1,7 @@
 #include"graph_new.h"
 #include<iostream>
 #include<queue>
-void Graph::insert(int v, int w, int weight){
-	adj[v]->next = new gNode(w, weight, adj[v]->next);
-	edgeCount++;
-	if(!digraph) adj[w]->next = new gNode(v, weight, adj[w]->next);
-}
+#include<list>
 
 void Graph::DFS(int vert){
 	visited[vert] = true;
@@ -33,4 +29,34 @@ void Graph::BFS(int vert){
 			}
 		}
 	}
+}
+
+std::vector<int> Graph::TopoSort(){
+	std::queue<int> cq;
+	std::vector<int> degree;
+	std::vector<int> topoSeq;
+	degree.assign(vertCount, 0);
+	for(int i = 0; i < vertCount; i++){
+		for(gLink g = adj[i]->next; g!=nullptr; g=g->next){
+			degree[g->vert]++;
+		}
+	}
+	for(int i = 0; i < vertCount; i++){
+		if(degree[i] == 0){
+			cq.push(i);
+		}
+		//std::cout<<"degree: "<<degree[i]<<std::endl;
+	}
+	int temp;
+	while(!cq.empty()){
+		temp = cq.front();
+		cq.pop();
+		topoSeq.push_back(temp);
+		//std::cout<<"sort: "<<temp<<std::endl;
+		for(gLink g = adj[temp]->next; g != nullptr; g=g->next){
+			degree[g->vert]--;
+			if(degree[g->vert] == 0) cq.push(g->vert);
+		}
+	}
+	return topoSeq;
 }
