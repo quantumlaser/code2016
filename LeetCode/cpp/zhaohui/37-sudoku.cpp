@@ -42,60 +42,10 @@ public:
 			}
 		}
 		solveSudoku(board, poss, numCnt);
-
-		/*
-		for (int i = 0; i<9; i++) {
-			for (int j = 0; j < 9; j++) {
-				for (set<int>::iterator it = poss[i][j].begin(); it != poss[i][j].end(); it++) {
-					cout << *it << " ";
-				}
-				cout << endl;
-			}
-			cout << endl;
-		}
-		*/
-
-	}
-
-	void addSudokuNum(vector<vector<set<int>>> & poss, int row, int col, int num) {
-		for (int i = 0; i < 9; i++) {
-			if (i != col)
-				poss[row][i].erase(num);
-			if (i != row)
-				poss[i][col].erase(num);
-		}
-		for (int i = 3 * (row / 3); i < 3 * (row / 3 + 1); i++) {
-			for (int j = 3 * (col / 3); j < 3 * (col / 3 + 1); j++) {
-				if (i != row && j != col)
-					poss[i][j].erase(num);
-			}
-		}
-		//poss[row][col].clear();
-		//poss[row][col].insert(num);
-	}
-
-	void removeSudokuNum(vector<vector<set<int>>> & poss, int row, int col, int num) {
-		for (int i = 0; i < 9; i++) {
-			if (i != col)
-				poss[row][i].insert(num);
-			if (i != row)
-				poss[i][col].insert(num);
-		}
-		for (int i = 3 * (row / 3); i < 3 * (row / 3 + 1); i++) {
-			for (int j = 3 * (col / 3); j < 3 * (col / 3 + 1); j++) {
-				if (i != row && j != col)
-					poss[i][j].insert(num);
-			}
-		}
-		//poss[row][col].clear();
-		//poss[row][col].insert(num);
 	}
 
 	bool solveSudoku(vector<vector<char>>& board, vector<vector<set<int>>> &poss, int &numCnt) {
 		vector<vector<int>> addLoc;
-		//vector<vector<char>> boardBak = board;
-		//vector<vector<set<int>>> possBak = poss;
-		//int numCntBak = numCnt;
 		while (numCnt<9 * 9) {
 			int numPre = numCnt;
 			int minPoss = 10;
@@ -124,29 +74,7 @@ public:
 				}
 			}
 			if (numPre == numCnt) {
-				//printSudoku(board);
-				if (!minPoss) {
-					/*
-					for (vector<vector<int>>::reverse_iterator it = addLoc.rbegin(); it != addLoc.rend();it++) {
-						removeSudokuNum(poss, (*it)[0], (*it)[1], (*it)[2]);
-						board[(*it)[0]][(*it)[1]] = '.';
-						numCnt--;
-					}
-					
-					for (int i = 0; i < board.size(); i++) {
-						for (int j = 0; j < board[i].size(); j++) {
-							board[i][j] = boardBak[i][j];
-							for (set<int>::iterator it = possBak[i][j].begin(); it != possBak[i][j].end(); it++) {
-								poss[i][j].insert(*it);
-							}
-						}
-					}
-					//board = boardBak;
-					//poss = possBak;
-					numCnt = numCntBak;
-					*/
-					return false;
-				}
+				if (!minPoss) return false;
 				
 				for (set<int>::iterator it = poss[minLoc[0]][minLoc[1]].begin(); it != poss[minLoc[0]][minLoc[1]].end(); it++) {
 					vector<vector<char>> boardBak = board;
@@ -159,8 +87,6 @@ public:
 					if (solveSudoku(board, poss, numCnt))
 						return true;
 					else {
-						//printSudoku(board);
-						//removeSudokuNum(poss, minLoc[0], minLoc[1], *it);
 						recoverSudoku(board, poss, boardBak, possBak);
 						numCnt = numCntBak;
 						board[minLoc[0]][minLoc[1]] = '.';
@@ -171,6 +97,22 @@ public:
 		}
 		return true;
 	}
+    
+    void addSudokuNum(vector<vector<set<int>>> & poss, int row, int col, int num) {
+		for (int i = 0; i < 9; i++) {
+			if (i != col)
+				poss[row][i].erase(num);
+			if (i != row)
+				poss[i][col].erase(num);
+		}
+		for (int i = 3 * (row / 3); i < 3 * (row / 3 + 1); i++) {
+			for (int j = 3 * (col / 3); j < 3 * (col / 3 + 1); j++) {
+				if (i != row && j != col)
+					poss[i][j].erase(num);
+			}
+		}
+	}
+    
 	void recoverSudoku(vector<vector<char>> &board, vector<vector<set<int>>> &poss,
 		vector<vector<char>> &boardBak, vector<vector<set<int>>> &possBak) {
 		for (int i = 0; i < board.size(); i++) {
@@ -182,6 +124,7 @@ public:
 			}
 		}
 	}
+    
 	void printSudoku(vector<vector<char>> &board) {
 		int left = 0;
 		for (int i = 0; i < board.size(); i++) {
