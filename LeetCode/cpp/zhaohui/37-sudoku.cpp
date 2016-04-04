@@ -9,6 +9,13 @@ using std::cout;
 using std::cin;
 using std::endl;
 class Solution {
+    struct Cell{
+        int row;
+        int col;
+        set<int> possibility;
+    };
+    vector<Cell> leftCell;
+    // TODO 可以用其保存后面还没有填充的地方。
 public:
 	bool isValidSudoku(vector<vector<char>>& board) {
 		bool row[9][9] = { false }, col[9][9] = { false }, box[9][9] = { false };
@@ -45,7 +52,6 @@ public:
 	}
 
 	bool solveSudoku(vector<vector<char>>& board, vector<vector<set<int>>> &poss, int &numCnt) {
-		vector<vector<int>> addLoc;
 		while (numCnt<9 * 9) {
 			int numPre = numCnt;
 			int minPoss = 10;
@@ -64,32 +70,30 @@ public:
 							board[i][j] = '0' + num + 1;
 							addSudokuNum(poss, i, j, num);
 							numCnt++;
-							vector<int> loc;
-							loc.push_back(i);
-							loc.push_back(j);
-							loc.push_back(num);
-							addLoc.push_back(loc);
 						}
 					}
 				}
 			}
 			if (numPre == numCnt) {
 				if (!minPoss) return false;
-				
-				for (set<int>::iterator it = poss[minLoc[0]][minLoc[1]].begin(); it != poss[minLoc[0]][minLoc[1]].end(); it++) {
-					vector<vector<char>> boardBak = board;
-					vector<vector<set<int>>> possBak = poss;
+				vector<vector<char>> boardBak = board;
+				vector<vector<set<int>>> possBak = poss;
+				for (int i = 0; i < 9; i++) {
+				    if(poss[minLoc[0]][minLoc[1]].find(i) == poss[minLoc[0]][minLoc[1]].end() )
+				        continue;
 					int numCntBak = numCnt;
-					addSudokuNum(poss, minLoc[0], minLoc[1], *it);
-					board[minLoc[0]][minLoc[1]] = '0' + *it + 1;	
+					addSudokuNum(poss, minLoc[0], minLoc[1], i);
+					board[minLoc[0]][minLoc[1]] = '0' + i + 1;	
 					numCnt++;
 
 					if (solveSudoku(board, poss, numCnt))
 						return true;
 					else {
-						recoverSudoku(board, poss, boardBak, possBak);
+						//recoverSudoku(board, poss, boardBak, possBak);
+						board = boardBak;
+						poss = possBak;
 						numCnt = numCntBak;
-						board[minLoc[0]][minLoc[1]] = '.';
+						//board[minLoc[0]][minLoc[1]] = '.';
 					}						
 				}			
 				return false;
@@ -126,16 +130,17 @@ public:
 	}
     
 	void printSudoku(vector<vector<char>> &board) {
-		int left = 0;
+		//int left = 0;
 		for (int i = 0; i < board.size(); i++) {
 			for (int j = 0; j < board[i].size(); j++) {
 				cout << board[i][j]<<" ";
-				if (board[i][j] == '.') left++;
+				//if (board[i][j] == '.') left++;
 
 			}
 			cout << endl;
 		}
-		cout << "left: " << left << endl<<endl;
+        cout<<endl;
+		//cout << "left: " << left << endl<<endl;
 	}
 	
 };
@@ -158,15 +163,11 @@ int main() {
 		cin.ignore();
 	}
 	cin.ignore();
-	for (int i = 0; i<9; i++) {
-		for (int j = 0; j<9; j++) {
-			cout << board[i][j];
-		}
-		cout << endl;
-	}
+    
 	Solution solution;
+    solution.printSudoku(board);
 	solution.solveSudoku(board);
 	solution.printSudoku(board);
-	cout << "valis: "<<solution.isValidSudoku(board) << endl;
+	cout << "valid: "<<solution.isValidSudoku(board) << endl;
 	return 0;
 }
