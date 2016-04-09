@@ -9,9 +9,7 @@
 #include<limits>
 const int INT_INF = std::numeric_limits<int>::max();
 */
-#define  MAX_VERT_NUM 601
 #define  MAX_INT_NUM 0x7fffffff
-#define MAX_RUNNING_TIME 9.5
 struct gNode{
 	int vert;
 	int weight;

@@ -2,17 +2,8 @@
 #include <queue>
 #include <algorithm>
 #include <iostream>
-struct Path{
-    std::vector<int> path;
-    unsigned int passCnt;
-    int cost;
-    Path(){passCnt = 0; cost = 0;}
-    Path(const Path & pa){
-        path = pa.path;
-        passCnt = pa.passCnt;
-        cost = pa.cost;
-    }
-};
+#include <stack>
+
 void printVec(std::vector<int> v);
 void printPath(Path & pa);
 
@@ -54,15 +45,16 @@ int GraphFuture::FindEdgeId(int v, int w){
 	while(g!=NULL && g->vert !=w) g = g->next;
 	return g ? g->edgeId : -1;
 }
-std::vector<int> GraphFuture::getBestEdgePath(){
+
+void GraphFuture::set_bestEdgePath(){
 	bestEdgePath.clear();
 	for(unsigned int i = 0; i < bestPath.size()-1; i++){
 		bestEdgePath.push_back(FindEdgeId(bestPath[i], bestPath[i+1]));
 	}
-	return bestEdgePath;
 }
 
 void GraphFuture::BruteForceBFS(){
+    initBestPath();
     std::queue<Path> que;
     Path first;
     first.path.push_back(passVert[0]);
@@ -97,6 +89,66 @@ void GraphFuture::BruteForceBFS(){
             que.push(newPa);
         }
         que.pop();
+    }
+
+    set_bestEdgePath();
+}
+
+void GraphFuture::BruteForceDFS(){
+    initBestPath();
+    Path first;
+    first.path.push_back(passVert[0]);
+    first.passCnt = 1;
+    std::stack<Path> st;
+    st.push(first);
+    while(!st.empty() && ((double)(clock() - startTime) / CLOCKS_PER_SEC) <MAX_RUNNING_TIME ) {
+        Path pa = st.top();
+        st.pop();
+        for(gLinkFuture g = adj[pa.path.back()]->next; g!=NULL; g=g->next){
+            Path newPa(pa);
+            if(std::find(newPa.path.begin(), newPa.path.end(), g->vert) != newPa.path.end())
+                continue; // Loop
+            if(g->vert == passVert[1] && newPa.passCnt != passVert.size()-1)
+                continue; // go to end without enough pass vert.
+            if(std::find(passVert.begin(), passVert.end(), g->vert) != passVert.end())
+                newPa.passCnt++;
+            newPa.cost = newPa.cost + g->weight;
+            newPa.path.push_back(g->vert);
+            //std::cout<<"passcnt: "<<newPa.passCnt<<"\n";
+            if(newPa.passCnt == passVert.size()){
+                if(newPa.cost < minCost){
+                    if(debug){
+                        std::cout<<"find better path:\n";
+                        printPath(newPa);
+                    }
+                    minCost = newPa.cost;
+                    bestPath = newPa.path;
+                }
+                continue; // if all pass, don't find more.
+            }
+            st.push(newPa);
+        }
+
+    }
+    //BruteForceDFS(first);
+    set_bestEdgePath();
+}
+
+void GraphFuture::BruteForceDFS(Path & pa){
+    if(((double)(clock() - startTime) / CLOCKS_PER_SEC) <MAX_RUNNING_TIME)
+        return;
+    if(pa.passCnt == passVert.size()){
+        if(pa.cost < minCost){
+            if(debug){
+                std::cout<<"find better path:\n";
+                printPath(pa);
+            }
+            minCost = pa.cost;
+            bestPath = pa.path;
+        }
+        return;
+    }
+    for(gLinkFuture g = adj[pa.path.back()]->next; g!=NULL; g=g->next){
     }
 }
 
