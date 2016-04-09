@@ -52,7 +52,6 @@ public:
 	int get_visited(int vert){ return visited[vert];}
 	void set_visited(int vert){ visited[vert] = true;}
 	gLink get_adj(int vert){ return adj[vert];};
-	void initAdj(); //根据顶点数，初始化边向量
 
 	gLink FindFirstAdj(int vert) { return adj[vert]->next;}
 	gLink FindNextAdj(int v, int w);

@@ -11,7 +11,7 @@ std::vector<int> getPassVert(char *demand);
 //你要完成的功能总入口
 void search_route(char *topo[5000], int edge_num, char *demand)
 {
-    Graph G(true);
+    GraphFuture G(true);
     G.set_debug(false);
     // unsigned short result[] = {2, 6, 3};//示例中的一个解
     if(G.get_debug()){

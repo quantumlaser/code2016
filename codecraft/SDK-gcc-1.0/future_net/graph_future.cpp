@@ -13,15 +13,21 @@ struct Path{
         cost = pa.cost;
     }
 };
-
 void printVec(std::vector<int> v);
 void printPath(Path & pa);
+
+void GraphFuture::insertVertId(int num){
+	if(vertIdMap.find(num) == vertIdMap.end()){
+		vertIdMap[num] = get_vertexCount();
+		set_vertexCount(get_vertexCount()+1);
+	}
+}
 
 
 void GraphFuture::initAdj(){
 	adj.clear();
-	for(int i=0; i < vertCount; i++){
-		gNode* node = new gNode(i, 0, NULL);
+	for(int i=0; i < get_vertexCount(); i++){
+		gNodeFuture* node = new gNodeFuture(-1, i, 0, NULL);
 		adj.push_back(node);
 	}
 }
@@ -32,24 +38,19 @@ void GraphFuture::initPassVert(std::vector<int> v){
 		passVert.push_back(getVertId(v[i]));
 	}
 }
-void GraphFuture::insertVertId(int num){
-	if(vertIdMap.find(num) == vertIdMap.end()){
-		vertIdMap[num] = vertCount;
-		vertCount++;
-	}
-}
+
 
 void GraphFuture::insert(int id, int v, int w, int weight){
-	adj[v]->next = new gNode(id, w, weight, adj[v]->next);
-	edgeCount++;
-	if(!digraph) adj[w]->next = new gNode(id, v, weight, adj[w]->next);
+	adj[v]->next = new gNodeFuture(id, w, weight, adj[v]->next);
+	set_edgeCount(get_edgeCount()+1);
+	if(!get_digraph()) adj[w]->next = new gNodeFuture(id, v, weight, adj[w]->next);
 }
 
 void GraphFuture::insert(int edge[4]){
 	insert(edge[0], getVertId(edge[1]), getVertId(edge[2]), edge[3]);
 }
 int GraphFuture::FindEdgeId(int v, int w){
-	gLink g = adj[v]->next;
+	gLinkFuture g = adj[v]->next;
 	while(g!=NULL && g->vert !=w) g = g->next;
 	return g ? g->edgeId : -1;
 }
@@ -59,17 +60,6 @@ std::vector<int> GraphFuture::getBestEdgePath(){
 		bestEdgePath.push_back(FindEdgeId(bestPath[i], bestPath[i+1]));
 	}
 	return bestEdgePath;
-}
-void GraphFuture::printPassVert(){
-	for(unsigned int i = 0; i < passVert.size(); i++)
-		std::cout<<passVert[i]<<" ";
-	std::cout<<"\n\n";
-}
-
-void GraphFuture::printBestEdgePath(){
-	for(unsigned int i = 0; i < bestEdgePath.size(); i++)
-		std::cout<<bestEdgePath[i]<<" ";
-	std::cout<<"\n\n";
 }
 
 void GraphFuture::BruteForceBFS(){
@@ -82,7 +72,7 @@ void GraphFuture::BruteForceBFS(){
         Path pa = que.front();
         //printVec(pa.path);
         //printPath(pa);
-        for(gLink g = adj[pa.path.back()]->next; g!=NULL; g=g->next){
+        for(gLinkFuture g = adj[pa.path.back()]->next; g!=NULL; g=g->next){
             Path newPa(pa);
             if(std::find(newPa.path.begin(), newPa.path.end(), g->vert) != newPa.path.end())
                 continue; // Loop
@@ -108,6 +98,31 @@ void GraphFuture::BruteForceBFS(){
         }
         que.pop();
     }
+}
+
+void GraphFuture::printPassVert(){
+	for(unsigned int i = 0; i < passVert.size(); i++)
+		std::cout<<passVert[i]<<" ";
+	std::cout<<"\n\n";
+}
+
+void GraphFuture::printBestEdgePath(){
+	for(unsigned int i = 0; i < bestEdgePath.size(); i++)
+		std::cout<<bestEdgePath[i]<<" ";
+	std::cout<<"\n\n";
+}
+
+void GraphFuture::printAllEdge(){
+	for(unsigned int i = 0; i < adj.size(); i++){
+		gLinkFuture g = adj[i]->next;
+		std::cout<<i<<":";
+		while(g!=NULL){
+			std::cout<<g->vert<<" ";
+			g = g->next;
+		}
+		std::cout<<"\n";
+	}
+    std::cout<<"\n";
 }
 
 void printVec(std::vector<int> v){

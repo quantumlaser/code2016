@@ -100,6 +100,7 @@ void Graph::printAllEdge(){
 			std::cout<<g->vert<<" ";
 			g = g->next;
 		}
-		std::cout<<"\n\n";
+		std::cout<<"\n";
 	}
+	std::cout<<"\n";
 }
