@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <iostream>
 #include "graph.h"
+#include "graph_future.h"
 #include <vector>
 void getEdgeInfo(char *edge, int a[4]);
 std::vector<int> getPassVert(char *demand);
@@ -48,7 +49,7 @@ void search_route(char *topo[5000], int edge_num, char *demand)
         G.printPassVert();
     }
 
-    G.BruteForceSearch();
+    G.BruteForceBFS();
     G.getBestEdgePath();
 
     if(G.get_debug()){
