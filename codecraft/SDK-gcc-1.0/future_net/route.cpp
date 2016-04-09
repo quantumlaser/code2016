@@ -57,7 +57,7 @@ void search_route(char *topo[5000], int edge_num, char *demand)
         std::cout<<"Time: "<<(double)(clock()-G.get_startTime())/ CLOCKS_PER_SEC<<"s\n";
     }
 
-    G.reset_startTime();
+    //G.reset_startTime();
     G.BruteForceDFS();
 
     if(G.get_debug()){

@@ -30,11 +30,22 @@ void GraphFuture::initPassVert(std::vector<int> v){
 	}
 }
 
-
+/*
 void GraphFuture::insert(int id, int v, int w, int weight){
 	adj[v]->next = new gNodeFuture(id, w, weight, adj[v]->next);
 	set_edgeCount(get_edgeCount()+1);
 	if(!get_digraph()) adj[w]->next = new gNodeFuture(id, v, weight, adj[w]->next);
+}*/
+
+void GraphFuture::insert(int id, int v, int w, int weight){
+    gNodeFuture *g = adj[v]->next,  *q = adj[v];
+    while(g && weight > g->weight) {q =g; g = g->next;}
+    q->next = new gNodeFuture(id, w, weight, g);
+	set_edgeCount(get_edgeCount()+1);
+	if(!get_digraph()) {
+        insert(id, w, v, weight);
+        set_edgeCount(get_edgeCount()-1);
+    }
 }
 
 void GraphFuture::insert(int edge[4]){
@@ -134,6 +145,7 @@ void GraphFuture::BruteForceDFS(){
     set_bestEdgePath();
 }
 
+// 递归式深度搜索，未完成
 void GraphFuture::BruteForceDFS(Path & pa){
     if(((double)(clock() - startTime) / CLOCKS_PER_SEC) <MAX_RUNNING_TIME)
         return;
