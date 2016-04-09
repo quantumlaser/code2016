@@ -23,7 +23,7 @@ void Graph::BruteForceSearch(){
     first.path.push_back(passVert[0]);
     first.passCnt = 1;
     que.push(first);
-    while(!que.empty()){
+    while(!que.empty() && ((double)(clock() - startTime) / CLOCKS_PER_SEC) <MAX_RUNNING_TIME){
         Path pa = que.front();
         //printVec(pa.path);
         //printPath(pa);

@@ -54,6 +54,7 @@ void search_route(char *topo[5000], int edge_num, char *demand)
     if(G.get_debug()){
         std::cout<<"bestEdgePath: ";
         G.printBestEdgePath();
+        std::cout<<"Time: "<<(double)(clock()-G.get_startTime())/ CLOCKS_PER_SEC<<"s\n";
     }
 
     std::vector<int> res = G.getBestEdgePath();

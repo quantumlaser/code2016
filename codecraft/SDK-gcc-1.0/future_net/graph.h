@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include <stdlib.h>
+#include "time.h"
 
 /*
 #include<limits>
@@ -10,6 +11,7 @@ const int INT_INF = std::numeric_limits<int>::max();
 */
 #define  MAX_VERT_NUM 601
 #define  MAX_INT_NUM 0x7fffffff
+#define MAX_RUNNING_TIME 9.5
 struct gNode{
 	int edgeId;
 	int vert;
@@ -34,6 +36,7 @@ class Graph{
 	bool digraph;
 	int minCost;
 	bool debug;
+	clock_t startTime;
 	std::vector<bool> visited;
 	std::vector<int> bestPath;
 	std::vector<int> bestEdgePath;
@@ -46,7 +49,8 @@ public:
 	Graph():
 		vertCount(0), edgeCount(0), digraph(false){}
 	Graph(int V, bool dig = false);
-	Graph(bool dig = false) { digraph = dig; vertCount = 0; edgeCount =0; minCost = MAX_INT_NUM;}
+	Graph(bool dig = false) { digraph = dig; vertCount = 0;
+		edgeCount =0; minCost = MAX_INT_NUM; startTime = clock();}
 	int get_vertexCount(){ return vertCount;}
 	void set_vertexCount(int vert){ vertCount = vert;}
 	int get_edgeCount(){ return edgeCount;}
@@ -58,6 +62,7 @@ public:
 	void initAdj();
 	void set_debug(bool de){debug = de;}
 	bool get_debug() {return debug;}
+	clock_t get_startTime(){ return startTime;}
 
 	void initPassVert(std::vector<int> v);
 
