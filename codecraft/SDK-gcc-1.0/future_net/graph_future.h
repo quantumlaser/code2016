@@ -64,6 +64,7 @@ public:
     void BruteForceBFS();
     void BruteForceDFS();
     void BruteForceDFS(Path & pa);
+    void ACO();
 
     void printAllEdge();
     void printPassVert();
