@@ -1,108 +1,74 @@
-//Í·ÎÄ¼ş°üº¬¹¤³Ì¶¨ÒåµÄÀàºÍ½á¹¹ÒÔ¼°º¯ÊıÃû¡¢±ØÒªµÄÍ·ÎÄ¼ş¡¢±ØÒªµØºê¶¨Òå¡¢ÃüÃû¿Õ¼ä
 #ifndef GRAPH_H
 #define GRAPH_H
-#include<vector>
-using namespace std;
-const INF 65535//ºê¶¨ÒåÒ»¸öÎŞÇî´óµÄÖµ£¬ÓÃÀ´±íÊ¾Á½µãÖ®¼ä²»Á¬Í¨
-//¼ÇÂ¼Ã¿´Î·ÃÎÊµÄµÃ·Ö£¬¼°·ÃÎÊµÄ¾°µã	
-struct View
-{
-	int score;
-	int m;
-	int *num;//=new int[m];
-	View *next;
-};	
-//±ß½á¹¹£¬Ä¬ÈÏbegin<end£»
-struct EDGE
-{
-	int begin;
-	int end;
+#include <vector>
+#include <map>
+#include <stdlib.h>
+#include "time.h"
+
+/*
+#include<limits>
+const int INT_INF = std::numeric_limits<int>::max();
+*/
+#define  MAX_VERT_NUM 601
+#define  MAX_INT_NUM 0x7fffffff
+#define MAX_RUNNING_TIME 9.5
+struct gNode{
+	int vert;
 	int weight;
+	gNode *next;
+	gNode(int v, int w, gNode *t){
+		vert = v;
+		weight = w;
+		next = t;
+	}
 };
-//¶¨ÒåÍ¼Àà
-class GRAPH
-{
-	int Vcnt,Ecnt;//¶¨ÒåÍ¼µÄ¶¥µãÊı¡¢±ßÊı
-	bool digraph;//ÅĞ¶ÏÓĞÏò¡¢ÎŞÏòÍ¼
-	bool *visited;//´æ´¢ÊÇ·ñ·ÃÎÊ
-	int *like;//´æ´¢ºÃ¸Ğ¶È
-	std::vector<int> adj;//Ê¹ÓÃÏòÁ¿Ä£°å¶¨ÒåµÄÁ´±í£¬ÓÃINF±íÊ¾±ß²»Á¬Í¨£¬ÓÃ0±íÊ¾×Ô¼ºµ½×Ô¼º£¬ÆäÊµÊı×Ö±íÊ¾µÄ¾ÍÊÇ³¤¶È
+typedef gNode* gLink;
+class Graph{
+	int vertCount;
+	int edgeCount;
+	bool digraph;
+	//int minCost;
+	//bool debug; //debugå†³å®šæ˜¯å¦è¾“å‡ºä¸€äº›ä¸­é—´è¿‡ç¨‹
+	//clock_t startTime;
+	std::vector<bool> visited;
+	//std::vector<int> bestPath; // æœ€ä¼˜è·¯å¾„çš„é¡¶ç‚¹åºåˆ—
+	//std::vector<int> bestEdgePath; // æœ€ä¼˜è·¯å¾„çš„è¾¹åºåˆ—
+	//std::map<int ,int > vertIdMap;// source Id -> Graph Id
+	//int edgeId[MAX_VERT_NUM][MAX_VERT_NUM]; // store the map between edge id and id; do not use at now.
+	std::vector<gLink> adj;
+
+	//std::vector<int> passVert; //demand é¡¶ç‚¹åºåˆ—
 public:
-	GRAPH(int V,int *like,bool digraph=false);//¹¹Ôìº¯Êı£¬È±Ê¡ÎªÎŞÏòÍ¼
-	int V()const{return Vcnt;}//È¡¶¥µã
-	int E()const{return Ecnt;}//È¡±ßÊı
-	bool directed()const{return digraph;}//ÅĞ¶ÏÓĞÏòÎŞÏò
-	bool ifvisited(int v){return visited[v];}//ÅĞ¶ÏÊÇ·ñ·ÃÎÊ
-	void setvisited(int v){visited[v]=true;}//±ê¼ÇÎªÒÑ·ÃÎÊ
-	int getlike(int v){return like[v];}//»ñÈ¡ºÃ¸Ğ¶È
-	void insert(int v,int w,int length);//²åÈë±ß
-	int getedge(int v,int w){return adj[v*Vcnt+w];};//ÅĞ¶ÏÊÇ·ñ´æÔÚ±ß
-	void remove(int v,int w);//ÒÆ³ı±ß
-	int FirstAdjVex(int v);//È¡¶¥µãµÄµÚÒ»¸öÁÚ½Ó¶¥µã
-	int NextAdjVex(int v,int w);//È¡vÔÚwºóµÄÏÂÒ»¸öÁÚ½Ó¶¥µã	
+	Graph():
+		vertCount(0), edgeCount(0), digraph(false){}
+	Graph(int V, bool dig = false);
+	Graph(bool dig = false) { digraph = dig; vertCount = 0;edgeCount =0; }
+	int get_vertexCount(){ return vertCount;}
+	void set_vertexCount(int vert){ vertCount = vert;}
+	int get_edgeCount(){ return edgeCount;}
+	void set_edgeCount(int edge){ edgeCount = edge;}
+	int get_digraph(){ return digraph;}
+	void set_digraph(bool dig) { digraph = dig;}
+	int get_visited(int vert){ return visited[vert];}
+	void set_visited(int vert){ visited[vert] = true;}
+	gLink get_adj(int vert){ return adj[vert];};
+	void initAdj(); //æ ¹æ®é¡¶ç‚¹æ•°ï¼Œåˆå§‹åŒ–è¾¹å‘é‡
+
+	gLink FindFirstAdj(int vert) { return adj[vert]->next;}
+	gLink FindNextAdj(int v, int w);
+
+	void insert(int v, int w, int weight = 1);
+
+	bool CheckEdge(int v, int w) ;
+
+	void clear_visited(){ visited.assign(vertCount, false);}
+
+	void DFS(int vert = 0);
+	void BFS(int vert = 0);
+	std::vector<int> TopoSort();
+
+	void printAllEdge();
+
 };
-
-//¹¤³ÌÊ¹ÓÃµÄËùÓĞº¯ÊıÃû
-GRAPH ViewGRAPH(GRAPH &G);//»ñµÃ¼İ³µ¹Û¹âÍ¼
-void DFS(GRAPH &G,int v);//Éî¶ÈÓÅÏÈ±éÀúÍ¼
-View * FindPath(GRAPH &G);//ÕÒµ½¼İ³µ¹Û¹âÂ·Ïß
-void Floyd(GRAPH &G,int *&d,int *&p);//ÇóÈ«Ô´×î¶ÌÂ·¾¶£¨ÓÅ»¯£ºÇóµ¥Ô´×î¶ÌÂ·¾¶£¬µ±×î³¤µÄ×î¶ÌÂ·¾¶±È±£´æÖµ¸ü´ó£¬Ö±½ÓÍ£Ö¹¸Ã´ÎÑ­»·£¬¿ËÓÅ»¯£©
-int minEdge(EDGE *pEdge,int num);//Çó×î¶Ì±ß
-void Prim(GRAPH &G,EDGE *&mst,int &length,int &count);//Çó×îĞ¡Éú³ÉÊ÷
-bool IFin(int *num,int n);//ÅĞ¶ÏnÊÇ·ñÔÚÊı×éÀï
-void InsertView(View *&pHead,View *p);//²åÈëÒ»ÌõÓÎÀÀÂ·Ïß
-void PrintView(View *&pHead,ofstream &fout);//Êä³öÓÎÀÀÂ·Ïß
-void FindHos(int V,int *d,ofstream &fout);//ÔÚÒÑÖªÈ«Ô´×î¶ÌÂ·¾¶µÄÌõ¼şÏÂ£¬ÕÒ³öÒ½ÔºÎ»ÖÃ¡£
-
-//ÀàÖĞµÄº¯Êı
-inline GRAPH::GRAPH(int V,int *love,bool digraph):Vcnt(V),Ecnt(0),digraph(digraph)//¹¹Ôìº¯Êı
-{
-	//Vcnt=V;
-	//Ecnt=0;
-	adj.assign(V*V,INF);
-	for(int i=0;i<V;i++)
-	{
-		adj[i*V+i]=0;
-	}
-	//digraph=dig;
-	visited=new bool[V];
-	like=new int[V];
-	for(int i=0;i<V;i++)
-	{
-		like[i]=love[i];
-		visited[i]=false;
-	}
-}
-inline void GRAPH::insert(int v,int w,int length)
-{
-	if(adj[v*Vcnt+w]==INF) Ecnt++;
-	adj[v*Vcnt+w]=length;
-	if(!digraph) adj[w*Vcnt+v]=length;
-}
-
-inline void GRAPH::remove(int v,int w)
-{
-	if(adj[v*Vcnt+w]!=INF) Ecnt--;
-	adj[v*Vcnt+w]=INF;
-	if(!digraph) adj[w*Vcnt+v]=INF;
-}
-
-inline int GRAPH::FirstAdjVex(int v)
-{
-	int w=0;
-	while(w<Vcnt&&(adj[v*Vcnt+w]==INF||adj[v*Vcnt+w]==0)) w++;
-	if(w==Vcnt) return -1;
-	else return w;
-}
-
-inline int GRAPH::NextAdjVex(int v,int w)
-{
-	int u=w+1;
-	while(u<Vcnt&&(adj[v*Vcnt+u]==0||adj[v*Vcnt+u]==INF)) u++;
-	if(u==Vcnt) return -1;
-	else return u;
-}
 
 #endif
-
-

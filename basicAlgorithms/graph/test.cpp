@@ -1,4 +1,4 @@
-#include"graph_new.h"
+#include"graph.h"
 #include<iostream>
 #include<fstream>
 void test();
